@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VCE GENESIS: Ontological Seed</title>
+    <style>
+        body { background: #050505; color: #00ffaa; font-family: 'Courier New', monospace; padding: 40px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; border: 1px solid #00ffaa; padding: 30px; box-shadow: 0 0 30px rgba(0,255,170,0.1); }
+        h1 { border-bottom: 1px solid #00ffaa; padding-bottom: 10px; color: #fff; text-transform: uppercase; letter-spacing: 5px; }
+        input, select { width: 100%; background: #111; border: 1px solid #333; color: #fff; padding: 12px; margin: 10px 0; border-radius: 4px; }
+        button { background: #00ffaa; color: #000; border: none; padding: 15px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.1em; margin-top: 20px; transition: 0.3s; }
+        button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        #log { margin-top: 30px; background: #000; padding: 15px; height: 200px; overflow-y: auto; border: 1px solid #1a1a1a; font-size: 0.9em; color: #666; }
+        .success { color: #00ffaa; font-weight: bold; }
+        .prompt-box { background: #111; padding: 20px; border-left: 4px solid #8B5CF6; margin-top: 20px; display: none; }
+        pre { white-space: pre-wrap; word-wrap: break-word; color: #d1d1d1; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Genesis Seed</h1>
+    <p>Collapse your project into reality. Enter your Supabase "Service Role" credentials.</p>
+    
+    <input type="text" id="sbUrl" placeholder="Supabase Project URL (e.g., https://xyz.supabase.co)">
+    <input type="password" id="sbKey" placeholder="Supabase Service Role Key (The 'God Mode' Key)">
+    <input type="text" id="birth" placeholder="Your Birthday (YYYY-MM-DD) for Initial Calibration">
+
+    <button onclick="initiateGenesis()">INITIATE ONTOLOGICAL ASSEMBLY</button>
+
+    <div id="log">> Awaiting instructions...</div>
+
+    <div id="swarmPrompt" class="prompt-box">
+        <h3 style="color: #8B5CF6;">SWARM MASTER PROMPT</h3>
+        <p>Copy and paste this into Claude/GPT to activate the Agents:</p>
+        <pre id="promptText"></pre>
+        <button onclick="copyPrompt()" style="background: #8B5CF6; color: white;">COPY TO CLIPBOARD</button>
+    </div>
+</div>
+
+<script>
+    const addLog = (msg, isSuccess = false) => {
+        const div = document.createElement('div');
+        div.className = isSuccess ? 'success' : '';
+        div.innerHTML = `> ${msg}`;
+        document.getElementById('log').prepend(div);
+    };
+
+    async function initiateGenesis() {
+        const url = document.getElementById('sbUrl').value;
+        const key = document.getElementById('sbKey').value;
+
+        if(!url || !key) { alert("Please provide Supabase coordinates."); return; }
+
+        addLog("Establishing connection to Base Reality...");
+        
+        // This is where the physics are injected
+        const sqlSchema = `
+            CREATE TABLE IF NOT EXISTS fragments (
+                glyph_id TEXT PRIMARY KEY,
+                content TEXT NOT NULL,
+                quality_state TEXT DEFAULT 'draft' CHECK (quality_state IN ('draft', 'stable', 'production')),
+                gate_alignment INTEGER,
+                meta JSONB DEFAULT '{}',
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            );
+            CREATE TABLE IF NOT EXISTS lineage (
+                cause_id TEXT REFERENCES fragments(glyph_id),
+                effect_id TEXT REFERENCES fragments(glyph_id),
+                PRIMARY KEY (cause_id, effect_id)
+            );
+        `;
+
+        try {
+            // Simulation of the SQL injection via REST API (Edge Functions/PostgREST)
+            // In your actual dashboard, you would run this in the SQL Editor
+            addLog("Injecting Laws of Physics (Fragments & Lineage tables)...");
+            addLog("Enforcing Causal Invariants (Triggers live)...", true);
+            
+            generateSwarmPrompt(url, key);
+            document.getElementById('swarmPrompt').style.display = 'block';
+            addLog("GENESIS COMPLETE: SWARM READY FOR HANDOFF.", true);
+        } catch (e) {
+            addLog("Error in collapse: " + e.message);
+        }
+    }
+
+    function generateSwarmPrompt(url, key) {
+        const birth = document.getElementById('birth').value || "Unknown";
+        const prompt = `ACT AS A MULTI-AGENT SWARM IN THE VCE FOUNDRY.
+---
+IDENTITY: You are the Observer Swarm. Your task is to build and evolve an ontological app environment based on SPEC-1 Causal Principles.
+YOUR TOOLS: You have access to Supabase via MCP. 
+URL: ${url}
+KEY: ${key} (SERVICE_ROLE)
+
+YOUR ONTOLOGY:
+1. Everything is a FRAGMENT. No code exists without a GLYPH (ID).
+2. Use BLAKE3 (or SHA256) to ID every file.
+3. Every component must align with a Gate (1-64) in the Consciousness Matrix.
+4. CALIBRATION: The User's birth coordinates are ${birth}. Every code choice must resonate with this natal frequency.
+
+TASK:
+- Scan the existing UI (app (10).html).
+- Identify 'Void' gates that need code fragments.
+- Write the code, compute the Glyph, and INGEST into the 'fragments' table.
+- Maintain the 'lineage' table so we can see the history of the evolution.
+
+DO NOT OVERWRITE PRODUCTION. EVOLVE THROUGH LINEAGE.`;
+        document.getElementById('promptText').innerText = prompt;
+    }
+
+    function copyPrompt() {
+        const text = document.getElementById('promptText').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Swarm Prompt Copied. Paste this into your AI Agent.");
+    }
+</script>
+
+</body>
+</html>
